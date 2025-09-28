@@ -1,0 +1,82 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: chatdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - elk-network
+
+  adminer:
+    image: adminer
+    ports:
+      - "8081:8080"
+
+  app:
+    build: .
+    env_file:
+      - .env.${ENVIRONMENT}
+    ports:
+      - "8080:8082"
+    depends_on:
+      - db
+      - logstash
+    logging:
+      driver: "json-file"
+    networks:
+      - elk-network
+
+  elasticsearch:
+    image: elasticsearch:8.17.1
+    container_name: elasticsearch
+    restart: always
+    volumes:
+      - elastic_data:/usr/share/elasticsearch/data/
+    environment:
+      - xpack.security.enabled=false  # Disable security for local development
+      - ES_JAVA_OPTS=-Xmx256m -Xms256m
+      - discovery.type=single-node
+    ports:
+      - '9200:9200'
+    networks:
+      - elk-network
+
+  logstash:
+      image: logstash:8.17.1
+      container_name: logstash
+      restart: always
+      volumes:
+        - ./logstash/pipeline:/usr/share/logstash/pipeline
+      depends_on:
+        - elasticsearch
+      ports:
+        - '5044:5044'
+      environment:
+        - LS_JAVA_OPTS=-Xmx256m -Xms256m
+      networks:
+        - elk-network
+
+  kibana:
+      image: kibana:8.17.1
+      container_name: kibana
+      restart: always
+      ports:
+        - '5601:5601'
+      environment:
+        - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      depends_on:
+        - elasticsearch
+      networks:
+        - elk-network
+
+networks:
+  elk-network:
+      driver: bridge
+
+volumes:
+  elastic_data: { }

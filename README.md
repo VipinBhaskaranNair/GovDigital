@@ -18,6 +18,7 @@ This microservice provides APIs to create and manage chat sessions and messages.
 - API key authentication (header `X-API-KEY`)
 - Rate limiting using Bucket4j
 - Centralized logging (ELK)
+- Kibana available at http://localhost:5601 (containerized). Add index pattern `logs*` to view logs.
 - Dockerized for local development
 - Swagger UI for API documentation
 - Actuator endpoints for health checks and metrics

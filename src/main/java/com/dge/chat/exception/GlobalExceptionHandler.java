@@ -19,7 +19,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<Void>> handleAll(Exception ex) {
-        // In production, log exception with correlation id; avoid returning internal exception text
         ex.printStackTrace();
         return ResponseEntity.internalServerError().body(ApiResponse.failure("Internal server error"));
     }

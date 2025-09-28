@@ -1,5 +1,6 @@
 package com.dge.chat.service.impl;
 
+import com.dge.chat.dto.CreateMessageRequest;
 import com.dge.chat.dto.MessageDTO;
 import com.dge.chat.entity.Message;
 import com.dge.chat.repository.ChatMessageRepository;
@@ -18,15 +19,16 @@ public class ChatMessageServiceImpl implements ChatMessageService {
     private final ChatSessionRepository sessionRepo;
 
     public ChatMessageServiceImpl(ChatMessageRepository messageRepo, ChatSessionRepository sessionRepo) {
-        this.messageRepo = messageRepo; this.sessionRepo = sessionRepo;
+        this.messageRepo = messageRepo;
+        this.sessionRepo = sessionRepo;
     }
 
     @Override
-    public MessageDTO addMessage(MessageDTO dto) {
-        sessionRepo.findById(dto.getSessionId()).orElseThrow(() -> new IllegalArgumentException("Session not found"));
-        Message e = MapperUtils.toEntity(dto);
-        Message saved = messageRepo.save(e);
-        return MapperUtils.toDto(saved);
+    public MessageDTO addMessage(CreateMessageRequest createMessageRequest) {
+        sessionRepo.findById(createMessageRequest.getSessionId()).orElseThrow(()
+                -> new IllegalArgumentException("Session not found"));
+        Message savedObject = messageRepo.save(MapperUtils.toEntity(createMessageRequest));
+        return MapperUtils.toDto(savedObject);
     }
 
     @Override

@@ -23,18 +23,13 @@ public class Message {
     @Column(name = "session_id", nullable = false)
     private String sessionId;
 
-    @Column(nullable = false)
-    private String role; // user / assistant / system
-
     @Column(nullable = false, columnDefinition = "text")
     private String content;
 
     @Column(columnDefinition = "text")
-    private String context; // optional JSON or metadata
+    private String context;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private Instant createdAt;
-
-    private Integer sequenceOrder;
 }

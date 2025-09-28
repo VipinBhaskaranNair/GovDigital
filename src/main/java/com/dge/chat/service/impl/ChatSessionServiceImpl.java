@@ -7,6 +7,7 @@ import com.dge.chat.entity.Session;
 import com.dge.chat.repository.ChatSessionRepository;
 import com.dge.chat.service.ChatSessionService;
 import com.dge.chat.util.MapperUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
+@Slf4j
 public class ChatSessionServiceImpl implements ChatSessionService {
 
     private final ChatSessionRepository sessionRepository;
@@ -31,6 +33,7 @@ public class ChatSessionServiceImpl implements ChatSessionService {
     public SessionDTO createSession(CreateSessionRequest request) {
         Session entity = MapperUtils.toEntity(request);
         Session savedObject = sessionRepository.save(entity);
+        log.info("Session created for user Id: {}", request.getUserId());
         return MapperUtils.toDto(savedObject);
     }
 

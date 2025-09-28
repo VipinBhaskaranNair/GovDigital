@@ -1,5 +1,6 @@
 package com.dge.chat.service;
 
+import com.dge.chat.dto.CreateMessageRequest;
 import com.dge.chat.dto.MessageDTO;
 import com.dge.chat.entity.Message;
 import com.dge.chat.entity.Session;
@@ -47,10 +48,11 @@ class ChatMessageServiceImplTest {
 
         when(sessionRepo.findById("s1")).thenReturn(Optional.of(new Session()));
 
-        Message saved = Message.builder().id("m1").sessionId("s1").role("user").content("hello").build();
+        Message saved = Message.builder().id("m1").sessionId("s1").content("hello").build();
+        CreateMessageRequest createMessageRequest = CreateMessageRequest.builder().sessionId("s1").content("hello").build();
         when(messageRepo.save(any())).thenReturn(saved);
 
-        MessageDTO result = service.addMessage(dto);
+        MessageDTO result = service.addMessage(createMessageRequest);
 
         assertNotNull(result);
         assertEquals("m1", result.getId());
@@ -59,7 +61,8 @@ class ChatMessageServiceImplTest {
 
     @Test
     void getMessages_returnsPaged() {
-        Message msg = Message.builder().id("m1").sessionId("s1").role("user").content("hello").build();
+        Message msg = Message.builder().id("m1").sessionId("s1").content("hello").build();
+        CreateMessageRequest createMessageRequest = CreateMessageRequest.builder().sessionId("s1").content("hello").build();
         Page<Message> page = new PageImpl<>(List.of(msg));
         when(messageRepo.findBySessionIdOrderByCreatedAtAsc(eq("s1"), any(PageRequest.class))).thenReturn(page);
 

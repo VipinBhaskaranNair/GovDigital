@@ -1,5 +1,6 @@
 package com.dge.chat.util;
 
+import com.dge.chat.dto.CreateMessageRequest;
 import com.dge.chat.dto.CreateSessionRequest;
 import com.dge.chat.dto.MessageDTO;
 import com.dge.chat.dto.SessionDTO;
@@ -7,6 +8,7 @@ import com.dge.chat.entity.Message;
 import com.dge.chat.entity.Session;
 import org.apache.commons.lang3.StringUtils;
 
+import java.time.Instant;
 import java.util.UUID;
 
 public class MapperUtils {
@@ -36,23 +38,33 @@ public class MapperUtils {
                 .userId(request.getUserId())
                 .favorite(request.isFavorite())
                 .sessionId(UUID.randomUUID().toString())
+                .createdAt(Instant.now())
+                .updatedAt(Instant.now())
                 .build();
     }
 
     public static MessageDTO toDto(Message e) {
-        if (e == null) return null;
-        MessageDTO d = new MessageDTO();
-        d.setId(e.getId()); d.setSessionId(e.getSessionId()); d.setRole(e.getRole()); d.setContent(e.getContent()); d.setCreatedAt(e.getCreatedAt()); d.setContext(e.getContext());
-        return d;
+        if (e == null) {
+            return null;
+        }
+        return MessageDTO.builder()
+                .id(e.getId())
+                .sessionId(e.getSessionId())
+                .content(e.getContent())
+                .context(e.getContext())
+                .createdAt(e.getCreatedAt())
+                .build();
     }
 
-    public static Message toEntity(MessageDTO d) {
-        if (d == null) return null;
+    public static Message toEntity(CreateMessageRequest createMessageRequest) {
+        if (createMessageRequest == null) {
+            return null;
+        }
         return Message.builder()
-                .id(d.getId())
-                .sessionId(d.getSessionId())
-                .role(d.getRole())
-                .content(d.getContent())
+                .id(UUID.randomUUID().toString())
+                .sessionId(createMessageRequest.getSessionId())
+                .content(createMessageRequest.getContent())
+                .createdAt(Instant.now())
                 .build();
     }
 }

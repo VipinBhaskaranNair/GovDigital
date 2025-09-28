@@ -1,5 +1,6 @@
 package com.dge.chat.controller;
 
+import com.dge.chat.dto.CreateMessageRequest;
 import com.dge.chat.dto.MessageDTO;
 import com.dge.chat.service.ChatMessageService;
 import com.dge.chat.util.ApiResponse;
@@ -15,13 +16,16 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class MessageController {
 
-    private final ChatMessageService service;
-    public MessageController(ChatMessageService service) { this.service = service; }
+    private final ChatMessageService chatMessageService;
+
+    public MessageController(ChatMessageService chatMessageService) {
+        this.chatMessageService = chatMessageService;
+    }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<MessageDTO>> add(@Valid @RequestBody MessageDTO messageDTO) {
-        log.info("Adding message: {}", messageDTO);
-        return ResponseEntity.ok(ApiResponse.success(service.addMessage(messageDTO)));
+    public ResponseEntity<ApiResponse<MessageDTO>> add(@Valid @RequestBody CreateMessageRequest createMessageRequest) {
+        log.info("Adding message: {}", createMessageRequest);
+        return ResponseEntity.ok(ApiResponse.success(chatMessageService.addMessage(createMessageRequest)));
     }
 
     @GetMapping("/session/{sessionId}")
@@ -30,7 +34,7 @@ public class MessageController {
                                                                      @RequestParam(defaultValue = "50") int size) {
         log.info("Getting messages for session: {}", sessionId);
         int safeSize = Math.min(size, 200); // cap page size to 200
-        Page<MessageDTO> p = service.getMessages(sessionId, PageRequest.of(page, safeSize));
+        Page<MessageDTO> p = chatMessageService.getMessages(sessionId, PageRequest.of(page, safeSize));
         return ResponseEntity.ok(ApiResponse.success(p));
     }
 }

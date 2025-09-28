@@ -8,11 +8,10 @@ import java.time.Instant;
 
 @Data
 @Builder
-public class MessageDTO {
-    private String id;
+public class CreateMessageRequest {
+    @NotBlank
     private String sessionId;
-    private String role;
+    @NotBlank
     private String content;
-    private Instant createdAt;
     private String context;
 }

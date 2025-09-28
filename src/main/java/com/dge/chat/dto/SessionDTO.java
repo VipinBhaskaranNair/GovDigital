@@ -14,7 +14,6 @@ import java.time.Instant;
 @NoArgsConstructor
 public class SessionDTO {
     private String id;
-    @NotBlank
     private String title;
     private String userId;
     private String sessionId;

@@ -14,13 +14,12 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@EntityListeners(AuditingEntityListener.class)
 public class Message {
     @Id
     @Column(nullable = false, updatable = false)
     private String id = UUID.randomUUID().toString();
 
-    @Column(name = "session_id", nullable = false)
+    @Column(nullable = false)
     private String sessionId;
 
     @Column(nullable = false, columnDefinition = "text")

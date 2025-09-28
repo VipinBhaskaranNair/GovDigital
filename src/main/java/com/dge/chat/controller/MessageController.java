@@ -8,8 +8,11 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/messages")
@@ -29,12 +32,13 @@ public class MessageController {
     }
 
     @GetMapping("/session/{sessionId}")
-    public ResponseEntity<ApiResponse<Page<MessageDTO>>> getMessages(@PathVariable String sessionId,
-                                                                     @RequestParam(defaultValue = "0") int page,
-                                                                     @RequestParam(defaultValue = "50") int size) {
-        log.info("Getting messages for session: {}", sessionId);
-        int safeSize = Math.min(size, 200); // cap page size to 200
-        Page<MessageDTO> p = chatMessageService.getMessages(sessionId, PageRequest.of(page, safeSize));
-        return ResponseEntity.ok(ApiResponse.success(p));
+    public ResponseEntity<ApiResponse<Page<MessageDTO>>> getMessages(@PathVariable("sessionId") String sessionId,
+                                                                     @RequestParam(defaultValue = "0", name = "page") int page,
+                                                                     @RequestParam(defaultValue = "50", name = "size") int size) {
+        log.info("Getting messages for session Id: {}", sessionId);
+        int safeSize = Math.min(size, 200);
+        log.info("Page size : {}", safeSize);
+        Page<MessageDTO> pagedResponse = chatMessageService.getMessages(sessionId, PageRequest.of(page, safeSize));
+        return ResponseEntity.ok(ApiResponse.success(pagedResponse));
     }
 }

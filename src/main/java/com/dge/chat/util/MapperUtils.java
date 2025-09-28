@@ -43,16 +43,16 @@ public class MapperUtils {
                 .build();
     }
 
-    public static MessageDTO toDto(Message e) {
-        if (e == null) {
+    public static MessageDTO toDto(Message message) {
+        if (message == null) {
             return null;
         }
         return MessageDTO.builder()
-                .id(e.getId())
-                .sessionId(e.getSessionId())
-                .content(e.getContent())
-                .context(e.getContext())
-                .createdAt(e.getCreatedAt())
+                .id(message.getId())
+                .sessionId(message.getSessionId())
+                .content(message.getContent())
+                .context(message.getContext())
+                .createdAt(message.getCreatedAt())
                 .build();
     }
 

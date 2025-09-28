@@ -1,5 +1,6 @@
 package com.dge.chat.controller;
 
+import com.dge.chat.dto.CreateSessionRequest;
 import com.dge.chat.dto.SessionDTO;
 import com.dge.chat.service.ChatSessionService;
 import com.dge.chat.util.ApiResponse;
@@ -20,15 +21,10 @@ public class SessionController {
     public SessionController(ChatSessionService service) { this.service = service; }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<SessionDTO>> create(@Valid @RequestBody SessionDTO sessionDTO) {
-        log.info("Create session with user Id: {}", sessionDTO.getUserId());
-        validateExistingSession(sessionDTO.getUserId(), sessionDTO.getSessionId());
-        SessionDTO createdSession = service.createSession(sessionDTO);
+    public ResponseEntity<ApiResponse<SessionDTO>> create(@Valid @RequestBody CreateSessionRequest request) {
+        log.info("Create session for user Id: {}", request.getUserId());
+        SessionDTO createdSession = service.createSession(request);
         return ResponseEntity.ok(ApiResponse.success(createdSession));
-    }
-
-    private void validateExistingSession(String userId, String sessionId) {
-
     }
 
     @GetMapping

@@ -28,7 +28,7 @@ public class RateLimitFilter extends OncePerRequestFilter {
     private Bucket resolveBucket(String key) {
         return cache.computeIfAbsent(key, k -> {
             // 100 requests per minute per key/ip
-            Bandwidth limit = Bandwidth.classic(1, Refill.intervally(1, Duration.ofMinutes(1)));
+            Bandwidth limit = Bandwidth.classic(100, Refill.intervally(100, Duration.ofMinutes(1)));
             return Bucket4j.builder().addLimit(limit).build();
         });
     }

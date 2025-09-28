@@ -1,30 +1,41 @@
 package com.dge.chat.util;
 
+import com.dge.chat.dto.CreateSessionRequest;
 import com.dge.chat.dto.MessageDTO;
 import com.dge.chat.dto.SessionDTO;
 import com.dge.chat.entity.Message;
 import com.dge.chat.entity.Session;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.UUID;
 
 public class MapperUtils {
-    public static SessionDTO toDto(Session e) {
-        if (e == null) return null;
+    public static SessionDTO toDto(Session session) {
+        if (session == null) {
+            return null;
+        }
         return SessionDTO.builder()
-                .id(e.getId())
-                .title(e.getTitle())
-                .userId(e.getUserId())
-                .favorite(e.isFavorite())
-                .createdAt(e.getCreatedAt())
-                .updatedAt(e.getUpdatedAt())
+                .id(session.getId())
+                .title(session.getTitle())
+                .userId(session.getUserId())
+                .sessionId(session.getSessionId())
+                .favorite(session.isFavorite())
+                .createdAt(session.getCreatedAt())
+                .updatedAt(session.getUpdatedAt())
                 .build();
     }
 
-    public static Session toEntity(SessionDTO d) {
-        if (d == null) return null;
+    public static Session toEntity(CreateSessionRequest request) {
+        if (request == null)
+        {
+            return null;
+        }
         return Session.builder()
-                .id(d.getId() != null ? d.getId() : null)
-                .title(d.getTitle())
-                .ownerId(d.getUserId())
-                .favorite(d.isFavorite())
+                .id(UUID.randomUUID().toString())
+                .title(request.getTitle())
+                .userId(request.getUserId())
+                .favorite(request.isFavorite())
+                .sessionId(UUID.randomUUID().toString())
                 .build();
     }
 

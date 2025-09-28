@@ -28,9 +28,9 @@ public class ApiKeyAuthFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String apiKey = request.getHeader(headerName);
         log.info("API key: {}", apiKey);
-        // Allow actuator without API key
+        // Allow actuator and swagger without API key
         String path = request.getRequestURI();
-        if (path.startsWith("/actuator")) {
+        if (path.startsWith("/actuator") || path.startsWith("/v3") || path.startsWith("/swagger")) {
             filterChain.doFilter(request, response);
             return;
         }

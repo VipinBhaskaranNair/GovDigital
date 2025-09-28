@@ -1,5 +1,6 @@
 package com.dge.chat.service;
 
+import com.dge.chat.dto.CreateSessionRequest;
 import com.dge.chat.dto.SessionDTO;
 import com.dge.chat.entity.Session;
 import com.dge.chat.repository.ChatMessageRepository;
@@ -38,11 +39,12 @@ class ChatSessionServiceImplTest {
         SessionDTO dto = new SessionDTO();
         dto.setTitle("Test Session");
         dto.setUserId("user1");
+        CreateSessionRequest request = CreateSessionRequest.builder().title("Test Session").userId("user1").build();
 
         Session saved = Session.builder().id("s1").title("Test Session").userId("user1").build();
         when(sessionRepo.save(any())).thenReturn(saved);
 
-        SessionDTO result = service.createSession(dto);
+        SessionDTO result = service.createSession(request);
 
         assertNotNull(result);
         assertEquals("s1", result.getId());
@@ -52,7 +54,7 @@ class ChatSessionServiceImplTest {
 
     @Test
     void deleteSession_deletesMessagesAndSession() {
-        Session s = Session.builder().id("s1").ownerId("user1").build();
+        Session s = Session.builder().id("s1").userId("user1").build();
         when(sessionRepo.findById("s1")).thenReturn(Optional.of(s));
 
         service.deleteSession("s1", "user1");
@@ -63,7 +65,7 @@ class ChatSessionServiceImplTest {
 
     @Test
     void renameSession_failsIfNotOwner() {
-        Session s = Session.builder().id("s1").ownerId("user1").title("old").build();
+        Session s = Session.builder().id("s1").userId("user1").title("old").build();
         when(sessionRepo.findById("s1")).thenReturn(Optional.of(s));
 
         SecurityException ex = assertThrows(SecurityException.class, () -> service.renameSession("s1", "otherUser", "new"));

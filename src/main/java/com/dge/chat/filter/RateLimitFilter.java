@@ -27,7 +27,7 @@ public class RateLimitFilter extends OncePerRequestFilter {
 
     private Bucket resolveBucket(String key) {
         return cache.computeIfAbsent(key, k -> {
-            // 100 requests per minute per key/ip
+            // 100 requests per minute
             Bandwidth limit = Bandwidth.classic(100, Refill.intervally(100, Duration.ofMinutes(1)));
             return Bucket4j.builder().addLimit(limit).build();
         });
@@ -35,7 +35,7 @@ public class RateLimitFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String key = request.getHeader("X-API-KEY"); // rate limit per API key
+        String key = request.getHeader("X-API-KEY");
         if (key == null || key.isEmpty()) {
             key = request.getRemoteAddr();
         }

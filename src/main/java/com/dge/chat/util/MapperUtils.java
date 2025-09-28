@@ -20,7 +20,6 @@ public class MapperUtils {
                 .id(session.getId())
                 .title(session.getTitle())
                 .userId(session.getUserId())
-                .sessionId(session.getSessionId())
                 .favorite(session.isFavorite())
                 .createdAt(session.getCreatedAt())
                 .updatedAt(session.getUpdatedAt())
@@ -37,7 +36,6 @@ public class MapperUtils {
                 .title(request.getTitle())
                 .userId(request.getUserId())
                 .favorite(request.isFavorite())
-                .sessionId(UUID.randomUUID().toString())
                 .createdAt(Instant.now())
                 .updatedAt(Instant.now())
                 .build();

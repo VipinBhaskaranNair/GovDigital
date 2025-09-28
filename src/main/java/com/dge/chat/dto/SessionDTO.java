@@ -16,7 +16,6 @@ public class SessionDTO {
     private String id;
     private String title;
     private String userId;
-    private String sessionId;
     private boolean favorite;
     private Instant createdAt;
     private Instant updatedAt;

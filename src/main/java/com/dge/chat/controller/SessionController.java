@@ -27,28 +27,24 @@ public class SessionController {
         return ResponseEntity.ok(ApiResponse.success(createdSession));
     }
 
-    @GetMapping
-    public ResponseEntity<ApiResponse<List<SessionDTO>>> list(Principal principal) {
-        String owner = principal != null ? principal.getName() : "demo-user";
-        return ResponseEntity.ok(ApiResponse.success(service.listSessions(owner)));
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<ApiResponse<List<SessionDTO>>> list(@PathVariable("userId") String userId) {
+        return ResponseEntity.ok(ApiResponse.success(service.listSessions(userId)));
     }
 
-    @PatchMapping("/{id}/rename")
-    public ResponseEntity<ApiResponse<SessionDTO>> rename(@PathVariable String id, @RequestParam String title, Principal principal) {
-        String owner = principal != null ? principal.getName() : "demo-user";
-        return ResponseEntity.ok(ApiResponse.success(service.renameSession(id, owner, title)));
+    @PatchMapping("/{sessionId}/rename")
+    public ResponseEntity<ApiResponse<SessionDTO>> rename(@PathVariable("sessionId") String sessionId, @RequestParam("title") String title) {
+        return ResponseEntity.ok(ApiResponse.success(service.renameSession(sessionId, title)));
     }
 
-    @PatchMapping("/{id}/favorite")
-    public ResponseEntity<ApiResponse<SessionDTO>> favorite(@PathVariable String id, @RequestParam boolean favorite, Principal principal) {
-        String owner = principal != null ? principal.getName() : "demo-user";
-        return ResponseEntity.ok(ApiResponse.success(service.markFavorite(id, owner, favorite)));
+    @PatchMapping("/{sessionId}/favorite")
+    public ResponseEntity<ApiResponse<SessionDTO>> favorite(@PathVariable("sessionId") String sessionId, @RequestParam boolean favorite) {
+        return ResponseEntity.ok(ApiResponse.success(service.markFavorite(sessionId, favorite)));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Void>> delete(@PathVariable String id, Principal principal) {
-        String owner = principal != null ? principal.getName() : "demo-user";
-        service.deleteSession(id, owner);
+    @DeleteMapping("/{sessionId}")
+    public ResponseEntity<ApiResponse<Void>> delete(@PathVariable("sessionId") String sessionId) {
+        service.deleteSession(sessionId);
         return ResponseEntity.ok(ApiResponse.success(null));
     }
 }

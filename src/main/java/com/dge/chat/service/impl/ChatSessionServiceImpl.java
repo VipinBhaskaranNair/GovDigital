@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,31 +39,35 @@ public class ChatSessionServiceImpl implements ChatSessionService {
     }
 
     @Override
-    public SessionDTO renameSession(String sessionId, String ownerId, String newTitle) {
-        Session s = sessionRepository.findById(sessionId).orElseThrow(() -> new IllegalArgumentException("Session not found"));
-        if (!s.getUserId().equals(ownerId)) throw new SecurityException("Not owner");
-        s.setTitle(newTitle);
-        return MapperUtils.toDto(sessionRepository.save(s));
+    public SessionDTO renameSession(String sessionId, String newTitle) {
+        Session session = sessionRepository.findById(sessionId).orElseThrow(() -> new IllegalArgumentException("Session not found"));
+        session.setTitle(newTitle);
+        session.setUpdatedAt(Instant.now());
+        log.info("Session renamed for session Id: {}", sessionId);
+        return MapperUtils.toDto(sessionRepository.save(session));
     }
 
     @Override
-    public void deleteSession(String sessionId, String ownerId) {
-        Session s = sessionRepository.findById(sessionId).orElseThrow(() -> new IllegalArgumentException("Session not found"));
-        if (!s.getUserId().equals(ownerId)) throw new SecurityException("Not owner");
+    public void deleteSession(String sessionId) {
+        Session session = sessionRepository.findById(sessionId).orElseThrow(() -> new IllegalArgumentException("Session not found"));
         messageRepository.deleteBySessionId(sessionId);
-        sessionRepository.delete(s);
+        sessionRepository.delete(session);
+        log.info("Session deleted for session Id: {}", sessionId);
     }
 
     @Override
-    public SessionDTO markFavorite(String sessionId, String ownerId, boolean favorite) {
-        Session s = sessionRepository.findById(sessionId).orElseThrow(() -> new IllegalArgumentException("Session not found"));
-        if (!s.getUserId().equals(ownerId)) throw new SecurityException("Not owner");
-        s.setFavorite(favorite);
-        return MapperUtils.toDto(sessionRepository.save(s));
+    public SessionDTO markFavorite(String sessionId, boolean favorite) {
+        Session session = sessionRepository.findById(sessionId).orElseThrow(() -> new IllegalArgumentException("Session not found"));
+        session.setFavorite(favorite);
+        session.setUpdatedAt(Instant.now());
+        log.info("Session {} marked as favorite: {}", sessionId, favorite);
+        return MapperUtils.toDto(sessionRepository.save(session));
     }
 
     @Override
     public List<SessionDTO> listSessions(String userId) {
-        return sessionRepository.findByUserIdOrderByUpdatedAtDesc(userId).stream().map(MapperUtils::toDto).collect(Collectors.toList());
+        return sessionRepository.findByUserIdOrderByUpdatedAtDesc(userId).stream()
+                .map(MapperUtils::toDto)
+                .collect(Collectors.toList());
     }
 }

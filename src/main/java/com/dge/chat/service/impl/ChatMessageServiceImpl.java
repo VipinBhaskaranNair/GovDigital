@@ -30,10 +30,9 @@ public class ChatMessageServiceImpl implements ChatMessageService {
 
     @Override
     public MessageDTO addMessage(CreateMessageRequest createMessageRequest) {
-        Session session = sessionRepo.findBySessionId(createMessageRequest.getSessionId());
-        if (session == null) {
-            throw new IllegalArgumentException("Session not found");
-        }
+        sessionRepo.findById(createMessageRequest.getSessionId())
+                .orElseThrow(() -> new IllegalArgumentException("Session not found"));
+
         Message savedObject = messageRepo.save(MapperUtils.toEntity(createMessageRequest));
         return MapperUtils.toDto(savedObject);
     }

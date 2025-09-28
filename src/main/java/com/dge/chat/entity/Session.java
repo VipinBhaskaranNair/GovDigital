@@ -28,8 +28,6 @@ public class Session {
 
     private boolean favorite = false;
 
-    private String sessionId;
-
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private Instant createdAt;

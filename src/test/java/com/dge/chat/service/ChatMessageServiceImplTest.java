@@ -43,7 +43,6 @@ class ChatMessageServiceImplTest {
     void addMessage_success() {
         MessageDTO dto = new MessageDTO();
         dto.setSessionId("s1");
-        dto.setRole("user");
         dto.setContent("hello");
 
         when(sessionRepo.findById("s1")).thenReturn(Optional.of(new Session()));

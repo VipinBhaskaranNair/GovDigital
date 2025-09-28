@@ -47,10 +47,10 @@ This microservice provides APIs to create and manage chat sessions and messages.
 ## API Summary
 
 - `POST /api/v1/sessions` — create session `{ "title": "My conversation" }`
-- `GET /api/v1/sessions` — list sessions
-- `PATCH /api/v1/sessions/{id}/rename?title=New` — rename
-- `PATCH /api/v1/sessions/{id}/favorite?favorite=true` — mark favorite
-- `DELETE /api/v1/sessions/{id}` — delete session and messages
+- `GET /api/v1/sessions/user/{userId}` — list sessions for a user
+- `PATCH /api/v1/sessions/{sessionId}/rename?title=New` — rename
+- `PATCH /api/v1/sessions/{sessionId}/favorite?favorite=true` — mark favorite
+- `DELETE /api/v1/sessions/{sessionId}` — delete session and messages
 - `POST /api/v1/messages` — add message `{ sessionId, role, content, context? }`
 - `GET /api/v1/messages/session/{sessionId}?page=0&size=50` — list messages
 

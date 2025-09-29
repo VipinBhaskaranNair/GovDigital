@@ -42,8 +42,9 @@ This microservice provides APIs to create and manage chat sessions and messages.
 
 4. Use the API with the API key header:
    ```bash
-   curl -H "X-API-KEY: your-secret" http://localhost:8080/api/v1/sessions
+   curl -H "X-API-KEY: {API-Key}" http://localhost:8080/api/v1/sessions
    ```
+   API-Key:52deab01-7e9c-4cd7-ae5d-96d925a7c125
 
 ## API Summary
 
